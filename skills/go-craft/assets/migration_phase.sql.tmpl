@@ -1,0 +1,32 @@
+-- Zero-downtime schema change, three phases, one file per phase + per deploy.
+-- See ../references/data/migrations.md.
+-- Bound lock/statement time so a migration fails fast instead of blocking writes.
+set lock_timeout = '3s';
+set statement_timeout = '60s';
+
+-- =====================================================================
+-- PHASE 1 — EXPAND (deploy 1): add nullable column; app writes old + new.
+-- =====================================================================
+-- up
+alter table users add column tier text;
+-- down
+alter table users drop column tier;
+
+-- =====================================================================
+-- PHASE 2 — MIGRATE (deploy 2): backfill in batches; switch reads to new.
+-- Run repeatedly until 0 rows are affected (or use a background job).
+-- =====================================================================
+-- up
+update users set tier = 'free'
+where id in (select id from users where tier is null order by id limit 5000);
+-- down
+-- (no-op: backfilled data is forward-only)
+
+-- =====================================================================
+-- PHASE 3 — CONTRACT (deploy 3): enforce constraint; drop the old column.
+-- =====================================================================
+-- up
+alter table users alter column tier set not null;
+-- alter table users drop column legacy_tier;
+-- down
+alter table users alter column tier drop not null;

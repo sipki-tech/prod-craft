@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "vercel-skill-cli-expert": {
+      "source": "sipki-tech/vercel-skills",
+      "sourceType": "github",
+      "skillPath": "skills/vercel-skill-cli-expert/SKILL.md",
+      "computedHash": "43d55006f5e38bc376dbf76a558d7303cc06038124de7808a12351341b55c6db"
+    }
+  }
+}

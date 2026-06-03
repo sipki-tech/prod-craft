@@ -1,0 +1,115 @@
+// example.v1.proto — the proto-craft exemplar.
+// One file exercising every convention: versioned package, file options,
+// a message with `reserved`, an enum with `*_UNSPECIFIED = 0`, a service with
+// Get/List/Create, named request/response messages, cursor pagination,
+// `google.api.http` REST mapping, `buf.validate` (protovalidate) constraints,
+// and doc comments on every symbol.
+// See ../references/style/*, ../references/api/*, ../references/integration/*.
+syntax = "proto3";
+
+package acme.user.v1;
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/acme/api/gen/user/v1;userv1";
+
+// UserStatus is the lifecycle state of an account.
+enum UserStatus {
+  // Default zero value; means the status was not set by the sender.
+  USER_STATUS_UNSPECIFIED = 0;
+  // The account is active and may sign in.
+  USER_STATUS_ACTIVE = 1;
+  // The account is temporarily suspended; sign-in is blocked.
+  USER_STATUS_SUSPENDED = 2;
+}
+
+// User is a registered account.
+message User {
+  // Numbers and names retired in earlier revisions; never reuse them.
+  reserved 4, 7 to 9;
+  reserved "phone_number", "full_name";
+
+  // id is the server-assigned unique identifier (UUID v4).
+  string id = 1;
+  // email is unique and stored lowercased; login is case-insensitive.
+  string email = 2 [(buf.validate.field).string.email = true];
+  // display_name is shown in the UI. Length 1–64.
+  string display_name = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  // status is the current lifecycle state.
+  UserStatus status = 5;
+  // created_at is the creation time in UTC.
+  google.protobuf.Timestamp created_at = 6;
+  // locale is an optional BCP-47 tag; unset means "use the account default".
+  optional string locale = 10;
+}
+
+// GetUserRequest identifies a single user to fetch.
+message GetUserRequest {
+  // id of the user to fetch (UUID v4).
+  string id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+// GetUserResponse returns a single user.
+message GetUserResponse {
+  // user is the requested account.
+  User user = 1;
+}
+
+// ListUsersRequest pages through users with a cursor.
+message ListUsersRequest {
+  // page_size: default 50, max 100; values above 100 are clamped server-side.
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 100
+  }];
+  // page_token is an opaque cursor; empty for the first page.
+  string page_token = 2;
+}
+
+// ListUsersResponse returns one page of users.
+message ListUsersResponse {
+  // users in this page, in a stable, total order (tie-broken by id).
+  repeated User users = 1;
+  // next_page_token is empty when there are no more pages.
+  string next_page_token = 2;
+}
+
+// CreateUserRequest creates a new user.
+message CreateUserRequest {
+  // user is the resource to create.
+  User user = 1 [(buf.validate.field).required = true];
+  // request_id deduplicates retries (UUID v4); the same id replays the first result.
+  string request_id = 2 [(buf.validate.field).string.uuid = true];
+}
+
+// CreateUserResponse returns the created user.
+message CreateUserResponse {
+  // user is the newly created account, including server-assigned fields.
+  User user = 1;
+}
+
+// UserService manages user accounts and their lifecycle.
+service UserService {
+  // GetUser returns a single user by id.
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {get: "/v1/users/{id}"};
+  }
+
+  // ListUsers returns a page of users using cursor pagination.
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {get: "/v1/users"};
+  }
+
+  // CreateUser registers a new user.
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "user"
+    };
+  }
+}

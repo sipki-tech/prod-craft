@@ -1,0 +1,39 @@
+# Proto task targets (https://taskfile.dev). Primary toolchain: EasyP.
+# See ../references/toolkit/ci.md and ../references/toolkit/easyp.md.
+# buf fallback commands are noted inline.
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  proto-lint:
+    desc: Lint .proto style rules.
+    cmds:
+      - easyp lint # buf fallback: buf lint
+
+  proto-breaking:
+    desc: Detect wire/JSON breaking changes against a baseline ref.
+    vars:
+      BASELINE: '{{.BASELINE | default "origin/main"}}'
+    cmds:
+      # buf fallback: buf breaking --against '.git#branch=main'
+      - easyp breaking --against {{.BASELINE}}
+
+  proto-gen:
+    desc: Regenerate code from .proto (messages, gRPC, gateway, OpenAPI).
+    cmds:
+      - easyp generate # buf fallback: buf generate
+
+  proto-format:
+    desc: Format .proto files in place.
+    cmds:
+      - easyp format -w # buf fallback: buf format -w
+
+  proto-check:
+    desc: Full proto gate — lint + breaking + generated-artifact freshness.
+    deps: [proto-lint, proto-breaking]
+    cmds:
+      - task: proto-gen
+      - git diff --exit-code # fail if generated artifacts drifted from commits

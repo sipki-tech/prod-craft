@@ -1,0 +1,50 @@
+// contracts.go — the app layer declares the interfaces it needs (consumer-defined).
+// Every method documents its sentinel error contract: "// Errors: ErrX, ErrY, unknown."
+// See ../references/style/interfaces.md, style/errors.md, architecture/clean.md.
+package app
+
+import (
+	"context"
+
+	"github.com/gofrs/uuid"
+)
+
+type (
+	// Repo persists domain entities. Implemented by adapters/repo.
+	Repo interface {
+		// UserByID returns the user with the given id.
+		// Errors: ErrNotFound, unknown.
+		UserByID(ctx context.Context, id uuid.UUID) (*User, error)
+
+		// UserByEmail returns the user with the given email.
+		// Errors: ErrNotFound, unknown.
+		UserByEmail(ctx context.Context, email string) (*User, error)
+
+		// UserSave stores a new user and returns its id.
+		// Errors: ErrEmailExist, ErrUsernameExist, unknown.
+		UserSave(ctx context.Context, user User) (uuid.UUID, error)
+
+		// Tx runs fn inside a transaction; commits on nil, rolls back otherwise.
+		// Errors: unknown.
+		Tx(ctx context.Context, fn func(Repo) error) error
+	}
+
+	// PasswordHash hashes and verifies passwords (argon2id/bcrypt).
+	PasswordHash interface {
+		Hashing(ctx context.Context, password string) ([]byte, error)
+		Compare(ctx context.Context, hashed, password []byte) bool
+	}
+
+	// Sessions stores revocable sessions (Redis, TTL = token lifetime).
+	Sessions interface {
+		// SessionSave stores a session.
+		// Errors: unknown.
+		SessionSave(ctx context.Context, s Session) error
+		// SessionByID returns a session.
+		// Errors: ErrNotFound, unknown.
+		SessionByID(ctx context.Context, id uuid.UUID) (*Session, error)
+		// SessionDelete removes a session (logout).
+		// Errors: unknown.
+		SessionDelete(ctx context.Context, id uuid.UUID) error
+	}
+)

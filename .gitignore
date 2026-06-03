@@ -1,0 +1,16 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Agents (local AI agent state)
+.agents/
+
+# Embedded repos (separate git projects)
+back-template/

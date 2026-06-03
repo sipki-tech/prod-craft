@@ -1,0 +1,70 @@
+# golangci-lint v2 starter for a Go service.
+# See ../references/toolkit/linting.md for the rationale behind each block.
+# Replace github.com/example/app with your module path.
+version: "2"
+
+run:
+  tests: false
+
+linters:
+  default: all
+  disable:
+    - exhaustruct      # too verbose for most structs
+    - lll              # line length handled by the formatter
+    - nonamedreturns   # named returns are useful for defer-based error wrapping
+    - varnamelen       # short names are idiomatic
+    - wsl              # whitespace style is too opinionated
+    - wsl_v5
+  settings:
+    tagliatelle:
+      case:
+        use-field-name: false
+        rules:
+          json: snake
+          yaml: snake
+          xml: snake
+          bson: snake
+    depguard:
+      rules:
+        cmd:
+          files: ["cmd/*/*.go"]
+          allow: [$gostd]
+        tests:
+          files: [$test]
+          allow:
+            - $gostd
+            - github.com/stretchr/testify
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+    rules:
+      - linters: [ireturn]
+        text: returns generic interface
+      - linters: [revive]
+        text: "package name"
+      - linters: [dupl, errcheck, exhaustruct, funlen, gochecknoglobals, gocyclo, gosec, ireturn, lll, unparam]
+        path: _test\.go
+    paths:
+      - bin
+      - scripts
+      - third_party$
+      - builtin$
+      - examples$
+
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/example/app)
+      custom-order: true
+  exclusions:
+    generated: lax

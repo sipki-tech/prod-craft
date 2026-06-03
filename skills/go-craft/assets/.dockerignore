@@ -1,0 +1,27 @@
+# Keep the Docker build context small. See ../references/toolkit/docker.md.
+
+# VCS
+.git
+.gitignore
+
+# Build output and local caches
+bin/
+dist/
+.cover/
+*.out
+*.test
+
+# Local environment and secrets
+.env
+.env.*
+
+# Docker / CI files (not needed inside the build context)
+Dockerfile
+.dockerignore
+docker-compose*.yml
+.github/
+
+# Editor / OS noise
+.idea/
+.vscode/
+.DS_Store

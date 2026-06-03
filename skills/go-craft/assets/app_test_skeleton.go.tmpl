@@ -1,0 +1,65 @@
+// init_test.go + a sample table-driven, parallel, gomock-based test.
+// See ../references/testing/{unit,parallel,mocking}.md.
+package app_test
+
+import (
+	"context"
+	"errors"
+	"testing"
+
+	"github.com/example/app/internal/app"
+	"github.com/example/app/internal/testhelper"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
+)
+
+//go:generate mockgen -source=contracts.go -destination mock.app.contracts_test.go -package app_test
+
+var errAny = errors.New("any error")
+
+type mocks struct {
+	repo     *MockRepo
+	hasher   *MockPasswordHash
+	sessions *MockSessions
+}
+
+// start builds all mocks, the system under test, and returns everything a test needs.
+func start(t *testing.T) (context.Context, *app.App, *mocks, *require.Assertions) {
+	t.Helper()
+	ctrl := gomock.NewController(t) // auto-verifies expectations via t.Cleanup
+
+	m := &mocks{
+		repo:     NewMockRepo(ctrl),
+		hasher:   NewMockPasswordHash(ctrl),
+		sessions: NewMockSessions(ctrl),
+	}
+	module := app.New(m.repo, m.hasher, m.sessions)
+
+	return testhelper.Context(t), module, m, require.New(t)
+}
+
+func TestApp_VerificationEmail(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		repoErr error
+		want    error
+	}{
+		"free":          {repoErr: app.ErrNotFound, want: nil},
+		"email_taken":   {repoErr: nil, want: app.ErrEmailExist},
+		"repo_internal": {repoErr: errAny, want: errAny},
+	}
+
+	for name, tc := range testCases {
+		name, tc := name, tc
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			ctx, module, m, assert := start(t)
+			m.repo.EXPECT().UserByEmail(ctx, "e@x.com").Return(nil, tc.repoErr)
+
+			err := module.VerificationEmail(ctx, "e@x.com")
+			assert.ErrorIs(err, tc.want)
+		})
+	}
+}

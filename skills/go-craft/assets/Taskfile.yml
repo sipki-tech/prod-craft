@@ -1,0 +1,59 @@
+# Task runner starter for a Go service (https://taskfile.dev).
+# See ../references/toolkit/dev.md and ../references/toolkit/ci.md.
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  init:
+    desc: Install dev tools.
+    cmds:
+      - go install go.uber.org/mock/mockgen@latest
+      - go install gotest.tools/gotestsum@latest
+      - go install golang.org/x/tools/cmd/stringer@latest
+
+  generate:
+    desc: Regenerate mocks, stringers, and proto code.
+    cmds:
+      - go generate ./...
+      - buf generate
+
+  build:
+    desc: Build the binary and container image.
+    cmds:
+      - "go build -o bin/ ./cmd/app/"
+      - docker compose build
+
+  test-unit:
+    desc: Unit tests with the race detector.
+    cmds:
+      - "gotestsum --format pkgname -- -race -count=1 -coverprofile=cover.out ./..."
+
+  test-integration:
+    desc: Integration tests against Docker-backed dependencies.
+    cmds:
+      - "gotestsum --format pkgname -- -tags=integration -race -count=1 ./..."
+
+  lint:
+    desc: Full gate — unit + build + Go lint + proto lint.
+    deps: [test-unit, build]
+    cmds:
+      - "golangci-lint run ./..."
+      - "buf lint"
+
+  vuln:
+    desc: Scan for known vulnerabilities.
+    cmds:
+      - "go run golang.org/x/vuln/cmd/govulncheck@latest ./..."
+
+  up:
+    desc: Start the local stack.
+    dotenv: [".env"]
+    cmds:
+      - "docker compose up --build --remove-orphans --detach"
+
+  down:
+    cmds:
+      - "docker compose down --volumes"
