@@ -1,0 +1,28 @@
+{
+  "class-definitions": {
+    "max-classes": 1
+  },
+  "function-definitions": {
+    "max-arguments": 6,
+    "max-returns": 3,
+    "max-local-variables": 10
+  },
+  "variable-naming": {
+    "style": "snake_case"
+  },
+  "function-naming": {
+    "style": "snake_case"
+  },
+  "class-naming": {
+    "style": "PascalCase"
+  },
+  "constant-naming": {
+    "style": "CONSTANT_CASE"
+  },
+  "signal-naming": {
+    "style": "snake_case"
+  },
+  "private-sub-names": {
+    "pattern": "^_[a-z0-9_]*$"
+  }
+}

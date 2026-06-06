@@ -1,6 +1,6 @@
-# 🗺️ Roadmap: Language Skills for Vercel Ecosystem
+# 🗺️ Roadmap: prod-craft Skills
 
-This repository contains specialized AI agent skills for different programming languages, built for the open **Vercel `npx skills` CLI ecosystem**. 
+This repository contains specialized AI agent skills for different programming languages and game engines, built for the open **Vercel `npx skills` CLI ecosystem**. 
 
 These skills focus on professional "craft" rather than basic syntax — covering style, tooling, architecture, and recipes for experienced developers.
 
@@ -22,16 +22,46 @@ Following the Vercel multi-skill repository standard, all skills live in the `sk
 - [x] Implement `references/project.md` (standard layout)
 - [x] Add `assets/` templates (golangci.yml, Taskfile.yml, contracts.go.tmpl, app_test_skeleton.go.tmpl, migration_phase.sql.tmpl)
 
-## 📌 Phase 2: Dart
-*Skill Name: `dart-craft`*
-*Focus: Flutter integration, async programming, null safety, and state management.*
-- [ ] Create `skills/dart-craft/` folder structure
-- [ ] Detail UI/Widget composition patterns
-- [ ] Async/await, Futures, and Streams handling
-- [ ] Sound null safety guidelines
-- [ ] BLoC/Provider state management idioms (if applicable)
+## 📌 Phase 2: Protocol Buffers — ✅ Complete
+*Skill Name: `proto-craft`*
+*Focus: Schema design, wire compatibility, API design (AIPs), EasyP toolchain, protovalidate.*
+- [x] Create `skills/proto-craft/` structure
+- [x] Write `SKILL.md` and `MAP.md`
+- [x] Implement `references/` (style, schema, api, toolkit)
+- [x] Add `assets/` (easyp.yaml, Taskfile, example.proto)
 
-## 📌 Phase 3: Swift
+## 📌 Phase 3: Flutter / Dart 3 — ✅ Complete
+*Skill Name: `flutter-craft`*
+*Focus: Widget composition, BLoC architecture, async programming, null safety, testing, and accessibility.*
+- [x] Create `skills/flutter-craft/` structure
+- [x] Write `SKILL.md` and `MAP.md`
+- [x] Implement `references/style/` (naming, types, imports, classes, collections, comments, null-safety)
+- [x] Implement `references/architecture/` (layered, feature-first, bloc, state, di, domain-modeling)
+- [x] Implement `references/widgets/` (composition, performance, responsive, theming)
+- [x] Implement `references/async/` (futures, streams, isolates, errors)
+- [x] Implement `references/dart3/` (patterns, records, class-modifiers)
+- [x] Implement `references/testing/` (unit, widget, golden, bloc, mocking, integration)
+- [x] Implement `references/toolkit/` (linting, codegen, ci, pub)
+- [x] Implement `references/recipes/` (navigation, forms, i18n, error-handling, platform-channels)
+- [x] Implement `references/accessibility/` and `references/security/`
+- [x] Add `assets/` (analysis_options.yaml, bloc_skeleton.dart.tmpl, widget_test_skeleton.dart.tmpl, feature_structure.md)
+
+## 📌 Phase 4: Godot 4 / GDScript — ✅ Complete
+*Skill Name: `godot-craft`*
+*Focus: Static typing, composition over inheritance, scene design, state machines, networking, object pooling, and CI.*
+- [x] Create `skills/godot-craft/` structure
+- [x] Write `SKILL.md` (Non-Negotiables, Decision Flow, Review Checklist) and `MAP.md`
+- [x] Implement `references/style/` (naming, typing, structure, enums, comments, signals)
+- [x] Implement `references/architecture/` (composition, signals, autoloads, project-layout, scene-design)
+- [x] Implement `references/patterns/` (state-machine, component, observer, resource-pattern)
+- [x] Implement `references/testing/` (unit, mocking, integration, ci)
+- [x] Implement `references/toolkit/` (linting, formatting, ci, editor)
+- [x] Implement `references/performance/` (profiling, gdscript, rendering, physics, pooling)
+- [x] Implement `references/networking/` (architecture, synchronization, security)
+- [x] Implement `references/export/` (pipeline, optimization, platforms)
+- [x] Add `assets/` (gdlintrc, gdformatrc, ci-godot.yml, project_settings.md, object_pool.gd, object_pool_manager.gd)
+
+## 📌 Phase 5: Swift
 *Skill Name: `swift-craft`*
 *Focus: Protocol-oriented programming, SwiftUI, safety, and conciseness.*
 - [ ] Create `skills/swift-craft/` folder structure
@@ -40,7 +70,7 @@ Following the Vercel multi-skill repository standard, all skills live in the `sk
 - [ ] SwiftUI declarative syntax and state (`@State`, `@Binding`)
 - [ ] Combine / async-await for asynchronous tasks
 
-## 📌 Phase 4: Kotlin
+## 📌 Phase 6: Kotlin
 *Skill Name: `kotlin-craft`*
 *Focus: Coroutines, expressive syntax, Android specifics, and null safety.*
 - [ ] Create `skills/kotlin-craft/` folder structure

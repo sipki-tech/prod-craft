@@ -1,0 +1,74 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Adjust these imports based on your actual file paths
+// import 'package:my_app/features/my_feature/bloc/feature_bloc.dart';
+// import 'package:my_app/features/my_feature/view/feature_view.dart'; // The view that consumes the bloc
+
+/*
+// Mock the BLoC
+class MockFeatureBloc extends MockBloc<FeatureEvent, FeatureState>
+    implements FeatureBloc {}
+
+void main() {
+  late FeatureBloc featureBloc;
+
+  setUp(() {
+    featureBloc = MockFeatureBloc();
+  });
+
+  Widget buildSubject() {
+    return MaterialApp(
+      home: BlocProvider.value(
+        value: featureBloc,
+        child: const FeatureView(),
+      ),
+    );
+  }
+
+  group('FeatureView', () {
+    testWidgets('renders initial state correctly', (tester) async {
+      // 1. Arrange: Stub the state
+      when(() => featureBloc.state).thenReturn(const FeatureState.initial());
+
+      // 2. Act: Pump the widget
+      await tester.pumpWidget(buildSubject());
+
+      // 3. Assert: Verify the expected UI elements
+      expect(find.byType(Text), findsWidgets);
+    });
+
+    testWidgets('renders loading indicator when state is loading', (tester) async {
+      when(() => featureBloc.state).thenReturn(const FeatureState.loading());
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+
+    testWidgets('renders error message when state is failure', (tester) async {
+      when(() => featureBloc.state).thenReturn(const FeatureState.failure('Oops'));
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.text('Oops'), findsOneWidget);
+    });
+    
+    testWidgets('adds DataRequested event when button is tapped', (tester) async {
+      when(() => featureBloc.state).thenReturn(const FeatureState.initial());
+
+      await tester.pumpWidget(buildSubject());
+
+      // Tap a button
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+
+      // Verify that the event was added to the bloc
+      verify(() => featureBloc.add(const FeatureEvent.dataRequested(id: '123'))).called(1);
+    });
+  });
+}
+*/

@@ -1,0 +1,66 @@
+// --- feature_event.dart ---
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'feature_event.freezed.dart';
+
+@freezed
+sealed class FeatureEvent with _$FeatureEvent {
+  const factory FeatureEvent.started() = _Started;
+  const factory FeatureEvent.dataRequested({required String id}) = _DataRequested;
+}
+
+// --- feature_state.dart ---
+import 'package:freezed_annotation/freezed_annotation.dart';
+// import '../models/feature_model.dart'; // Adjust import based on actual model
+
+part 'feature_state.freezed.dart';
+
+@freezed
+class FeatureState with _$FeatureState {
+  const factory FeatureState.initial() = _Initial;
+  const factory FeatureState.loading() = _Loading;
+  const factory FeatureState.success(/* FeatureModel data */) = _Success;
+  const factory FeatureState.failure(String message) = _Failure;
+}
+
+// --- feature_bloc.dart ---
+import 'package:flutter_bloc/flutter_bloc.dart';
+// import '../repositories/feature_repository.dart'; // Adjust import
+import 'feature_event.dart';
+import 'feature_state.dart';
+
+export 'feature_event.dart';
+export 'feature_state.dart';
+
+class FeatureBloc extends Bloc<FeatureEvent, FeatureState> {
+  // final FeatureRepository _repository;
+
+  FeatureBloc({
+    // required FeatureRepository repository,
+  })  : // _repository = repository,
+        super(const FeatureState.initial()) {
+    on<_Started>(_onStarted);
+    on<_DataRequested>(_onDataRequested);
+  }
+
+  void _onStarted(
+    _Started event,
+    Emitter<FeatureState> emit,
+  ) {
+    // Initial setup if required
+  }
+
+  Future<void> _onDataRequested(
+    _DataRequested event,
+    Emitter<FeatureState> emit,
+  ) async {
+    emit(const FeatureState.loading());
+    try {
+      // final data = await _repository.fetchData(id: event.id);
+      // emit(FeatureState.success(data));
+      emit(const FeatureState.success());
+    } catch (e) {
+      emit(FeatureState.failure(e.toString()));
+    }
+  }
+}

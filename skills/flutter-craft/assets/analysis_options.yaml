@@ -1,0 +1,39 @@
+# Strict lint config based on very_good_analysis
+# Provides a robust foundation for building scalable, maintainable Flutter apps.
+
+include: package:very_good_analysis/analysis_options.10.3.0.yaml
+
+analyzer:
+  # Exclude generated files from linting
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "lib/generated_plugin_registrant.dart"
+  
+  # Treat specific warnings as errors for stricter checks
+  errors:
+    # Always handle missing returns to avoid unexpected nulls
+    missing_return: error
+    # Force exhaustive switch statements to prevent missed cases
+    missing_enum_constant_in_switch: error
+    # Treat unawaited futures as errors to prevent async bugs
+    unawaited_futures: error
+    
+  language:
+    # Enable strict type checking
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    # Enforce standard formatting and style guidelines
+    always_declare_return_types: true # Increases code readability and avoids implicit dynamic
+    cancel_subscriptions: true # Prevents memory leaks by ensuring StreamSubscriptions are cancelled
+    close_sinks: true # Prevents resource leaks
+    prefer_single_quotes: true # Promotes consistency
+    avoid_print: true # Prevents debugging logs from reaching production
+    prefer_const_constructors: true # Improves performance by reducing unnecessary rebuilds
+    sort_pub_dependencies: true # Keeps pubspec.yaml organized
+    unawaited_futures: true # Ensure futures are awaited or explicitly ignored
+    use_build_context_synchronously: true # Prevents crashes when using BuildContext after async gaps

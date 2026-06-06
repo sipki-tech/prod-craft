@@ -31,6 +31,8 @@ Install a skill, and your AI coding assistant immediately knows:
 |---|---|---|
 | [`go-craft`](./skills/go-craft/) | Go (Golang) | Idiomatic style, clean architecture, testing, data access, observability, security, tooling |
 | [`proto-craft`](./skills/proto-craft/) | Protocol Buffers / gRPC | Schema design, wire compatibility, API design (AIPs), EasyP toolchain, protovalidate |
+| [`flutter-craft`](./skills/flutter-craft/) | Flutter / Dart 3 | Widget composition, BLoC architecture, async patterns, testing, theming, accessibility |
+| [`godot-craft`](./skills/godot-craft/) | Godot 4 / GDScript 2.0 | Static typing, composition over inheritance, scene design, state machines, networking, pooling |
 
 > More skills are planned — see the [Roadmap](./ROADMAP.md).
 
@@ -56,9 +58,9 @@ After installation, the skills are automatically picked up by compatible AI agen
 
 3. **Load only what you need.** Each skill is modular: a `SKILL.md` entry point, a `MAP.md` navigation map, and fine-grained `references/` files. The agent loads only the files relevant to the current task.
 
-4. **Assets you can copy-paste.** Starter configs (linters, CI, Taskfiles, proto configs) live in `assets/` — ready to drop into your repo.
+4. **Assets you can copy-paste.** Starter configs (linters, CI pipelines, templates) live in `assets/` — ready to drop into your repo.
 
-5. **Production-first tooling.** EasyP over buf. golangci-lint with an opinionated rule set. `-race` always. Every convention is CI-enforceable.
+5. **Production-first tooling.** Every convention is CI-enforceable. Linter configs, test runners, export pipelines — each skill ships with the tooling to back up its rules.
 
 ## Repository Structure
 
@@ -70,11 +72,21 @@ prod-craft/
 │   │   ├── MAP.md          # Navigation map
 │   │   ├── references/     # Deep-dive docs (style, arch, data, testing, ...)
 │   │   └── assets/         # Starter configs & templates
-│   └── proto-craft/        # Protocol Buffers & gRPC standards
+│   ├── proto-craft/        # Protocol Buffers & gRPC standards
+│   │   ├── SKILL.md
+│   │   ├── MAP.md
+│   │   ├── references/
+│   │   └── assets/
+│   ├── flutter-craft/      # Flutter & Dart 3 standards
+│   │   ├── SKILL.md
+│   │   ├── MAP.md
+│   │   ├── references/     # style, architecture, widgets, async, testing, ...
+│   │   └── assets/         # analysis_options.yaml, templates
+│   └── godot-craft/        # Godot 4 & GDScript 2.0 standards
 │       ├── SKILL.md
 │       ├── MAP.md
-│       ├── references/     # Deep-dive docs (style, schema, api, toolkit, ...)
-│       └── assets/         # Starter configs (easyp.yaml, Taskfile, example.proto)
+│       ├── references/     # style, architecture, patterns, performance, ...
+│       └── assets/         # gdlintrc, gdformatrc, ci-godot.yml, object_pool.gd
 ├── ROADMAP.md              # Planned skills & milestones
 └── skills-lock.json        # Installed external skills lock
 ```
