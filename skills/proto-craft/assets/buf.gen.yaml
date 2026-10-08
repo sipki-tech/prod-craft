@@ -1,5 +1,5 @@
-# buf FALLBACK for the EasyP `generate` block (see ../references/toolkit/codegen.md).
-# Use only if migrating from buf. The primary config lives in ./easyp.yaml.
+# buf FALLBACK for the EasyP easyp.gen.yaml (see ../references/toolkit/codegen.md).
+# Use only if migrating from buf. The primary config is ./easyp.gen-starter.yaml.
 # Pin plugin versions to current releases for deterministic, reproducible output.
 version: v2
 

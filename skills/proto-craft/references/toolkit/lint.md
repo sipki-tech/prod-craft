@@ -3,14 +3,16 @@
 Linting enforces the conventions in `style/` and `api/` mechanically. Adopt the recommended rule set, opt out only with intent, and fix violations rather than silencing them.
 
 ## Adopt the recommended rule set
-Enable the standard/default rule group rather than hand-picking rules.
+Enable the standard preset rather than hand-picking rules.
 - **Reason:** The curated set encodes community consensus (naming, enum zero value, package-version suffix, comment requirements) that matches this skill's `style/` rules; cherry-picking drifts from convention. See [`easyp.md`](./easyp.md).
 
 ```yaml
 # easyp.yaml
-lint:
-  use:
-    - DEFAULT      # buf fallback: STANDARD
+version: v1
+linters:
+  default: STANDARD   # MINIMAL + BASIC + DEFAULT rules; buf fallback: lint.use [STANDARD]
+  enable:
+    - COMMENTS        # doc comments on public symbols (style/comments.md)
 ```
 
 ## Opt out per-rule, with a reason
@@ -18,12 +20,17 @@ If a rule genuinely doesn't fit, disable that single rule in config with a comme
 - **Reason:** A targeted, documented exception is auditable; a blanket opt-out quietly erodes the whole style baseline.
 
 ```yaml
-lint:
-  use:
-    - DEFAULT
-  except:
+linters:
+  default: STANDARD
+  disable:
     - PACKAGE_VERSION_SUFFIX   # internal-only package; versioned at the gateway
+issues:
+  exclude-rules:
+    - path: api/legacy/**      # frozen legacy schema; rewritten in v2
+      linters: [FIELD_LOWER_SNAKE_CASE]
 ```
+
+For a single declaration, use an inline directive that names the rule: `// easyp:disable FIELD_LOWER_SNAKE_CASE` above the declaration. `// easyp:off` is not valid and fails the whole lint run.
 
 ## Key rules map to this skill's conventions
 The high-value lint rules enforce the same things `style/` mandates.
@@ -48,15 +55,15 @@ easyp lint   # buf fallback: buf lint
 ```
 
 ## Format on save / pre-commit
-Run the formatter to normalize whitespace and layout; don't hand-align.
+Run a formatter to normalize whitespace and layout; don't hand-align. EasyP has no formatter, so use `buf format -w` as a standalone tool.
 - **Reason:** Consistent formatting keeps diffs minimal and frees review for substance. See [`../style/files.md`](../style/files.md).
 
 ```bash
-easyp format -w   # buf fallback: buf format -w
+buf format -w   # EasyP has no format command
 ```
 
 ## Checklist
-- [ ] Default/standard rule set enabled.
+- [ ] `linters.default: STANDARD` (or stricter) enabled.
 - [ ] Opt-outs are per-rule and commented.
 - [ ] Violations fixed in the schema, not silenced.
 - [ ] Formatter run before commit.

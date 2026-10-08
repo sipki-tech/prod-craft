@@ -22,7 +22,7 @@ Idiomatic, professional-grade standards for Protocol Buffers: style, schema desi
 - Naming / file layout / field numbers / presence / enums / well-known types / comments → `style/*`.
 - Message & `oneof` shape / compatibility table / evolution / defaults → `schema/*`.
 - Service & RPC design / errors / pagination / streaming / versioning → `api/*`.
-- `easyp.yaml` (primary), lint rule set, breaking checks, codegen, CI gate → `toolkit/*`.
+- EasyP v1 (`protobuf.mod`, `easyp.yaml`, `easyp.gen.yaml`, `protobuf.lock`), lint rule set, breaking checks, codegen, CI gate → `toolkit/*`. A v0 `easyp.yaml` (`deps:`, `lint.use`, `generate.inputs`) → migrate with `easyp migrate` (`toolkit/easyp.md`).
 - REST mapping, `protovalidate` constraints, proto3 JSON → `integration/*`.
 
 ## Non-Negotiables
