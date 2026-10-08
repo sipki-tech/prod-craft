@@ -1,0 +1,21 @@
+# Starter EasyP v1 policy (lint + breaking) — the primary proto-craft toolchain.
+# Copy to the repo root as easyp.yaml, next to protobuf.mod and easyp.gen.yaml.
+# (Not named easyp.yaml here: `easyp validate-config` scans every directory.)
+# See ../references/toolkit/easyp.md, lint.md, breaking.md.
+version: v1
+
+# Lint: adopt the curated standard preset; opt out per-rule, with a documented reason.
+linters:
+  default: STANDARD
+  # disable:
+  #   - PACKAGE_VERSION_SUFFIX   # only with a written justification
+
+# Breaking: wire + JSON compatibility against main (CI may override with --against).
+# buf fallback (in buf.yaml):
+#   breaking:
+#     use:
+#       - WIRE_JSON
+breaking:
+  baseline: git:main
+  categories: [WIRE_JSON]
+  ignore_unstable: true

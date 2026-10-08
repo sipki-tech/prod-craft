@@ -37,7 +37,7 @@ Load only the files relevant to your current task. Each row says when to read it
 
 | File | When to Read |
 |---|---|
-| [`toolkit/easyp.md`](./references/toolkit/easyp.md) | **EasyP** is the primary toolchain: `easyp.yaml` (lint/breaking/deps/gen), module layout, dependencies. buf fallback notes included. |
+| [`toolkit/easyp.md`](./references/toolkit/easyp.md) | **EasyP v1** is the primary toolchain: `protobuf.mod` + `protobuf.lock` (deps), `easyp.yaml` (lint/breaking), `easyp.gen.yaml` (codegen); migrating from EasyP v0. buf fallback notes included. |
 | [`toolkit/lint.md`](./references/toolkit/lint.md) | Recommended rule set, enable/disable policy, common violations + fixes. |
 | [`toolkit/breaking.md`](./references/toolkit/breaking.md) | Breaking detection in CI against a baseline git ref; what counts as breaking. |
 | [`toolkit/codegen.md`](./references/toolkit/codegen.md) | Plugins (go, go-grpc, gateway, protovalidate, openapi), committing artifacts, `go_package`, determinism. |
@@ -55,7 +55,9 @@ Load only the files relevant to your current task. Each row says when to read it
 
 | File | Use |
 |---|---|
-| [`assets/easyp.yaml`](./assets/easyp.yaml) | Starter EasyP config (lint + breaking + deps + gen) — the default toolchain. |
+| [`assets/easyp-starter.yaml`](./assets/easyp-starter.yaml) | Starter EasyP v1 policy (lint + breaking); copy as `easyp.yaml`. |
+| [`assets/easyp.gen-starter.yaml`](./assets/easyp.gen-starter.yaml) | Starter EasyP v1 codegen (go, grpc, gateway, openapi remote plugins); copy as `easyp.gen.yaml`. |
+| [`assets/protobuf-starter.mod`](./assets/protobuf-starter.mod) | Starter module manifest (googleapis, grpc-gateway, protovalidate); copy as `protobuf.mod`, run `easyp mod tidy`. |
 | [`assets/buf.gen.yaml`](./assets/buf.gen.yaml) | Fallback buf generation config; use only if migrating from buf. |
 | [`assets/example.v1.proto`](./assets/example.v1.proto) | One exemplary file exercising every convention end-to-end. |
 | [`assets/Taskfile.proto.yml`](./assets/Taskfile.proto.yml) | Task targets: `proto-lint`, `proto-breaking`, `proto-gen`, `proto-format`. |

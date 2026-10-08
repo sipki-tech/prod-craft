@@ -8,6 +8,11 @@ tasks:
     cmds:
       - task --list
 
+  proto-deps:
+    desc: Resolve protobuf.mod and write protobuf.lock (after editing dependencies).
+    cmds:
+      - easyp mod tidy # buf fallback: buf dep update
+
   proto-lint:
     desc: Lint .proto style rules.
     cmds:
@@ -27,13 +32,15 @@ tasks:
       - easyp generate # buf fallback: buf generate
 
   proto-format:
-    desc: Format .proto files in place.
+    desc: Format .proto files in place (EasyP has no formatter; buf is used standalone).
     cmds:
-      - easyp format -w # buf fallback: buf format -w
+      - buf format -w
 
   proto-check:
     desc: Full proto gate — lint + breaking + generated-artifact freshness.
-    deps: [proto-lint, proto-breaking]
     cmds:
-      - task: proto-gen
+      - easyp --frozen mod download
+      - easyp --frozen lint
+      - easyp --frozen breaking --against {{.BASELINE | default "origin/main"}}
+      - easyp --frozen generate
       - git diff --exit-code # fail if generated artifacts drifted from commits

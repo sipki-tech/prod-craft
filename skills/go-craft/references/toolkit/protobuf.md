@@ -1,13 +1,13 @@
 # Protobuf & gRPC Codegen
 
-Treat `.proto` files as the **single source of truth** for your API. Generate Go (messages, gRPC, gateway, validation, OpenAPI) from them, lint them, and check for breaking changes in CI. Use `buf` as the default tool; `EasyP` is a drop-in alternative with the same config shape if you need its extra rules or a single static binary.
+Treat `.proto` files as the **single source of truth** for your API. Generate Go (messages, gRPC, gateway, validation, OpenAPI) from them, lint them, and check for breaking changes in CI. Use `buf` as the default tool; `EasyP` is a Git-native alternative (no registry) if you need its extra rules or a single static binary.
 
 ## Tool Choice
 
 | Tool | Use when |
 |---|---|
 | `buf` | Default. Mature, fast, BSR remote plugins, broad ecosystem. |
-| `EasyP` | Drop-in `buf` replacement (`easyp lint`, `easyp generate`, `easyp mod`). Same `easyp.yaml` shape; extra opinionated lint rules. Pick one and stay consistent. |
+| `EasyP` | Git-native `buf` alternative (`easyp lint`, `easyp generate`, `easyp get`, `easyp mod tidy`). v1 mirrors buf's split: `protobuf.mod` + `protobuf.lock` (deps), `easyp.yaml` (lint/breaking), `easyp.gen.yaml` (codegen). See `proto-craft/references/toolkit/easyp.md`. Pick one and stay consistent. |
 
 Both are far better than hand-rolled `protoc` bash scripts: deterministic builds, dependency management, built-in lint + breaking-change detection.
 

@@ -13,8 +13,17 @@ buf breaking --against '.git#branch=main'
 ```
 
 ## Choose the wire-compatibility category
-Use the wire-level breaking category (EasyP's default breaking set; buf's `WIRE`/`WIRE_JSON`), not just file-structure checks, for runtime-shared schemas.
+Use a wire-level profile (`WIRE_JSON`, or `WIRE` when JSON is never used) for runtime-shared schemas, not just the source-level default (`FILE`).
 - **Reason:** Wire categories flag the changes that actually corrupt data (renumbering, type-group crossings) and JSON-name changes that break REST clients. See [`../integration/json-mapping.md`](../integration/json-mapping.md).
+
+```yaml
+# easyp.yaml
+version: v1
+breaking:
+  baseline: git:main        # default for `easyp breaking`; --against overrides
+  categories: [WIRE_JSON]   # FILE (default) | PACKAGE | WIRE_JSON | WIRE
+  ignore_unstable: true     # v1alpha1 / v1beta1 packages may still change
+```
 
 ```yaml
 # buf.yaml — parity
@@ -22,6 +31,8 @@ breaking:
   use:
     - WIRE_JSON   # wire + JSON compatibility
 ```
+
+Add `FILE` (`categories: [FILE, WIRE_JSON]`) when consumers compile the generated code and file moves or `go_package` changes must also be caught.
 
 ## What counts as breaking
 The detector flags the same operations the compatibility table forbids.
